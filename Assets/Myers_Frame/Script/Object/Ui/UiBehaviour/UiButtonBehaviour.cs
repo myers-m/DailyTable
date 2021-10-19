@@ -19,26 +19,28 @@ public class UiButtonBehaviour : UiBaseBehaviour
 
     void SetEvent()
     {
-        if (this._buttonEvent != "")
+        switch (this._buttonEvent)
         {
-            switch (this._buttonEvent)
-            {
-                case "Open":
-                    this.SetAction(() => {
-                        MyFrame.UiManager._instance.OpenWindow(this._goalUi);
-                    });
-                    break;
+            case "Open":
+                this.SetAction(() =>
+                {
+                    MyFrame.UiManager._instance.OpenWindow(this._goalUi);
+                });
+                break;
 
-                case "Close":
-                    this.SetAction(()=> {
-                        MyFrame.UiManager._instance.CloseWindow(this._goalUi);
-                    });
-                    break;
+            case "Close":
+                this.SetAction(() =>
+                {
+                    MyFrame.UiManager._instance.CloseWindow(this._goalUi);
+                });
+                break;
 
-                default:
-                    this.SetAction((UnityEngine.Events.UnityAction)MyFrame.UiManager._instance.Get("GetEvent", this._buttonEvent)[0]);
-                    break;
-            }
+            case "":
+                break;
+
+            default:
+                this.SetAction((UnityEngine.Events.UnityAction)MyFrame.UiManager._instance.Get("GetEvent", this._buttonEvent, this._self)[0]);
+                break;
         }
     }
 

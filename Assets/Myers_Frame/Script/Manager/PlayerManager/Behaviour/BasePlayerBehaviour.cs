@@ -24,8 +24,20 @@ namespace MyFrame {
 
         }
 
-        public void DoSomeThing(string tag, object[] param) {
+        public virtual void DoSomeThing(string tag, object[] param)
+        {
+            switch (tag)
+            {
+                case "SaveData":
+                    this._self.SaveData(this._path, this._name, this);
+                    break;
 
+                case "LoadData":
+                    this._name = (string)param[0];
+                    this._path = (string)param[1];
+                    this._self.LoadData(this._path, this._name, this);
+                    break;
+            }
         }
 
         public object[] GetSomeThing(string tag, object[] param) {
