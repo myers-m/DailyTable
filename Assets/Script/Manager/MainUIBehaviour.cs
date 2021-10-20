@@ -7,7 +7,21 @@ using UnityEngine.Events;
 [My(BehaviourType.Ui,"StartScene","")]
 public class MainUIBehaviour : BaseBehaviour
 {
+    UiManager _self;
+
+    Animation _menuAnimation;
     bool _openMenu = true;
+
+    public override void Awake(BaseManager self)
+    {
+        base.Awake(self);
+        this._self = (UiManager)self;
+    }
+
+    public override void Start()
+    {
+        this._menuAnimation = this._self.GetElement("MenuPanel").GetComponent<Animation>();
+    }
 
     public override object[] GetSomeThing(string tag, object[] param)
     {
@@ -24,6 +38,10 @@ public class MainUIBehaviour : BaseBehaviour
                     case "OpenChildTable":
                         action = () => { this.OpenChildTable(); };
                         break;
+
+                    case "Exit":
+                        action = () => { EventManager._instance.DoEvent("Exit"); };
+                        break;
                 }
                return new object[] { action };
         }
@@ -32,14 +50,8 @@ public class MainUIBehaviour : BaseBehaviour
 
     void TakeMenu()
     {
-        if (this._openMenu)
-        {
-            //obj.GetComponent<Animation>().Play("OpenMenu");
-        }
-        else
-        {
-            //obj.GetComponent<Animation>().Play("CloseMenu");
-        }
+        this._menuAnimation.Play(this._openMenu ? "CloseMenu" : "OpenMenu");
+        this._openMenu = !this._openMenu;
     }
 
     void OpenChildTable()
