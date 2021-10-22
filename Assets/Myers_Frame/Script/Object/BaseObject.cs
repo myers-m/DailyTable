@@ -2,17 +2,49 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 public class BaseObject : MonoBehaviour {
     public Transform _transform;
     public Action _updateAction;
     public Action _fixedUpdateAction;
     public Action _lateUpdateAction;
+    [SerializeField]
+    public SerializableDic<string, ObjectParam> _serialDic = new SerializableDic<string, ObjectParam>();
+    [NonSerialized]
+    public Dictionary<string, object> _dic = new Dictionary<string, object>();
     [ReadOnly]
     public SerializableDictionary<string, IBaseObjectBehaviour> _behaviourList = new SerializableDictionary<string, IBaseObjectBehaviour>();
 
     protected virtual void Awake() {
         this._transform = this.transform;
+        #region 序列化字段
+        foreach (var dic in this._serialDic)
+        {
+            Transform element = this._transform.Find(dic.Key);
+            object behaviour = null;
+            switch (dic.Value)
+            {
+                case ObjectParam.Text:
+                    behaviour = element.GetComponent<Text>();
+                    break;
+
+                case ObjectParam.Image:
+                    behaviour = element.GetComponent<Image>();
+                    break;
+
+                case ObjectParam.Gameobject:
+                    behaviour = element.gameObject;
+                    break;
+
+                case ObjectParam.InputFiled:
+                    behaviour = element.GetComponent<InputField>();
+                    break;
+            }
+            this._dic.Add(dic.Key, behaviour);
+        }
+        this._serialDic = null;
+        #endregion
         foreach (KeyValuePair<string, IBaseObjectBehaviour> element in this._behaviourList)
         {
             element.Value.Awake(this);
@@ -86,4 +118,12 @@ public class BaseObject : MonoBehaviour {
     protected virtual void DoDestroy(object[] param) {
         Destroy(this.gameObject);
     }
+}
+
+public enum ObjectParam
+{
+    Text,
+    Image,
+    InputFiled,
+    Gameobject
 }

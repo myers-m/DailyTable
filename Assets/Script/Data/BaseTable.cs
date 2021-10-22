@@ -8,4 +8,5 @@ public class BaseTable
     public string _name = "";
     public string _content = "";
     public float _value = 0;
+    public float _maxValue = 0;
 }

@@ -18,9 +18,19 @@ public class UiText : BaseObjectBehaviour
     public override void DoSomeThing(string tag, object[] param)
     {
         switch (tag) {
-            case "SetText":
+            case "Text":
                 this._text.text = (string)param[0];
                 break;
         }
+    }
+
+    public override object[] GetSomeThing(string tag, object[] param)
+    {
+        switch (tag)
+        {
+            case "Text":
+                return new object[] { this._text };
+        }
+        return null;
     }
 }
